@@ -43,10 +43,12 @@ def computer_hand(c_hand_list) -> list:
     return c_hand_list
 
 def who_wins(player_hand_list: list, c_hand_list: list, results: dict) -> dict:
+    is_it_draw = False
     if player_hand_list[1] == c_hand_list[1]:
         print("It's a draw.")
         results["Draws"] += 1
-        return results
+        is_it_draw = True
+        return results, is_it_draw
     else:
         if player_hand_list[1] == 1: #Rock
             if c_hand_list[1] == 3: # Scissor
@@ -69,7 +71,7 @@ def who_wins(player_hand_list: list, c_hand_list: list, results: dict) -> dict:
             elif c_hand_list[1] == 1: #Rock
                 print("You lost.")
                 results["Loses"] += 1
-        return results
+        return results, is_it_draw
 
 def results_game(results: dict, player_hand_list: list, c_hand_list: list):
     max_value = max(results.values())
@@ -83,16 +85,15 @@ def results_game(results: dict, player_hand_list: list, c_hand_list: list):
     print("Thank you for playing!")
     print("*"*50)
 
-def game(player_hand_list: list, c_hand_list:list, results:dict):
-    results = who_wins(player_hand_list, c_hand_list, results)
+def game(player_hand_list: list, c_hand_list:list, results:dict, rounds_start:int) -> dict:
+    results, is_it_draw = who_wins(player_hand_list, c_hand_list, results)
+    if is_it_draw == True:
+        rounds_start -= 1
     print("*"*50)
     print(f'Result is now:')
     print(f'{"Wins":<8}{"Loses":<8}{"Draws":<8}')
     print(f'{results["Wins"]:<8}{results["Loses"]:<8}{results["Draws"]:<8}')
-
-    # for key,value in results.items():
-    #     print(f'{key}: {value}')
-    return results
+    return results, rounds_start
 
 if __name__=="__main__":
     while True:
@@ -113,7 +114,9 @@ if __name__=="__main__":
                 if player_hand_list is None:
                     continue
                 c_hand_list = computer_hand(c_hand_list)
-                results = game(player_hand_list, c_hand_list, results)
+                results, rounds_start = game(player_hand_list, c_hand_list, results, rounds_start)
+                print("rounds")
+                print(rounds_start)
                 rounds_start += 1
             results_game(results, player_hand_list, c_hand_list)
             break
