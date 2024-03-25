@@ -1,14 +1,6 @@
 from random import randint
 from fuzzywuzzy import process
 
-
-def game(player_hand_list: list, c_hand_list:list, results:dict):
-    results = who_wins(player_hand_list, c_hand_list, results)
-    print(f'Result is now:')
-    for key,value in results.items():
-        print(f'{key}: {value}')
-    return results
-
 def player_hand(hand: str, player_hand_list: list) -> list:
     options = ["1. Rock", "2. Paper", "3. Scissors"]
     try:
@@ -95,6 +87,7 @@ def results_game(results: dict, player_hand_list: list, c_hand_list: list):
     max_keys = [key for key, value in results.items() if value == max_value]
     max_keys = "".join(max_keys)
     # print(max_keys, max_value)
+    print("*"*50)
     if max_keys == "Wins":
         print("You won!")
     elif max_keys == "Loses":
@@ -102,18 +95,27 @@ def results_game(results: dict, player_hand_list: list, c_hand_list: list):
     else:
         print("DRAW!")
     print("Thank you for playing!")
+    print("*"*50)
+
+def game(player_hand_list: list, c_hand_list:list, results:dict):
+    results = who_wins(player_hand_list, c_hand_list, results)
+    print("*"*50)
+    print(f'Result is now:')
+    for key,value in results.items():
+        print(f'{key}: {value}')
+    return results
 
 if __name__=="__main__":
     try:
         results = {"Wins": 0, "Loses": 0, "Draws": 0}
         player_hand_list = []
         c_hand_list = []
-        rounds = int(input('How many rounds would you like to play?'))
+        rounds = int(input('How many rounds would you like to play?\n'))
         rounds_start = 1
         while rounds_start <= rounds:
-            print("*"*40)
+            print("*"*50)
             print(f"Round {rounds_start}:")
-            hand = input('Enter your choice: (1.Rock/2.Paper/3.Scissors)')
+            hand = input('Enter your choice (1.Rock/2.Paper/3.Scissors): ')
             player_hand_list = player_hand(hand, player_hand_list)
             c_hand_list = computer_hand(c_hand_list)
             results = game(player_hand_list, c_hand_list, results)
