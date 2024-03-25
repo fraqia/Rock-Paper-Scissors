@@ -72,24 +72,13 @@ def who_wins(player_hand_list: list, c_hand_list: list, results: dict) -> dict:
         return results
 
 def results_game(results: dict, player_hand_list: list, c_hand_list: list):
-    if len(set(results.values())) == 1:
-        print("Need one more game to decide the victor")
-        hand = input('Enter your choice: (1.Rock/2.Paper/3.Scissors)')
-        player_hand_list = player_hand(hand, player_hand_list)
-        if player_hand_list is None:
-            return
-        c_hand_list = computer_hand(c_hand_list)
-        results = game(player_hand_list, c_hand_list, results)
     max_value = max(results.values())
-    max_keys = [key for key, value in results.items() if value == max_value]
-    max_keys = "".join(max_keys)
-    # print(max_keys, max_value)
     print("*"*50)
-    if max_keys == "Wins":
+    if results["Wins"] > results["Loses"]:
         print("You won!")
-    elif max_keys == "Loses":
+    elif results["Wins"] < results["Loses"]:
         print("You lost!")
-    else:
+    elif results["Wins"] == results["Loses"]:
         print("DRAW!")
     print("Thank you for playing!")
     print("*"*50)
@@ -98,8 +87,11 @@ def game(player_hand_list: list, c_hand_list:list, results:dict):
     results = who_wins(player_hand_list, c_hand_list, results)
     print("*"*50)
     print(f'Result is now:')
-    for key,value in results.items():
-        print(f'{key}: {value}')
+    print(f'{"Wins":<8}{"Loses":<8}{"Draws":<8}')
+    print(f'{results["Wins"]:<8}{results["Loses"]:<8}{results["Draws"]:<8}')
+
+    # for key,value in results.items():
+    #     print(f'{key}: {value}')
     return results
 
 if __name__=="__main__":
@@ -112,6 +104,7 @@ if __name__=="__main__":
             rounds_start = 1
             while rounds_start <= rounds:
                 player_hand_list = []
+                c_hand_list = []
                 print("*"*50)
                 print(f"Round {rounds_start}:")
                 hand = input('Enter your choice (Rock/Paper/Scissors): ')
@@ -122,7 +115,7 @@ if __name__=="__main__":
                 c_hand_list = computer_hand(c_hand_list)
                 results = game(player_hand_list, c_hand_list, results)
                 rounds_start += 1
-            # results_game(results, player_hand_list, c_hand_list)
+            results_game(results, player_hand_list, c_hand_list)
             break
         except ValueError:
             print("Invalid input! Please enter a valid number of rounds.")
