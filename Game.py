@@ -15,8 +15,12 @@ def player_hand(hand: str, player_hand_list: list) -> list:
         if hand in ['1', '2', '3']:
             closest_match = options[int(hand) - 1]
             score = 100
-        closest_match, score = process.extractOne(hand, options)
-        print(f"Closest match: {closest_match} (Score: {score})")
+            # player_hand_list.append(closest_match)
+            # player_hand_list.append(player_hand)
+            # return player_hand_list
+        else:
+            closest_match, score = process.extractOne(hand, options)
+        # print(f"Closest match: {closest_match} (Score: {score})")
         if score < 95:
             print("Invalid choice! Please try again.")
             return None  
@@ -31,7 +35,7 @@ def player_hand(hand: str, player_hand_list: list) -> list:
             closest_match = "Scissors"
         player_hand_list.append(closest_match)
         player_hand_list.append(player_hand)
-        print(player_hand_list)
+        # print(player_hand_list)
         print(f'You: {closest_match}')
         return player_hand_list
     except ValueError:
@@ -45,7 +49,7 @@ def computer_hand(c_hand_list) -> list:
         if c_hand == value:
             c_hand_list.append(key)
             c_hand_list.append(value)
-    print(c_hand_list)
+    # print(c_hand_list)
     print(f"Computer:{c_hand_list[0]}")
     return c_hand_list
 
@@ -90,11 +94,13 @@ def results_game(results: dict, player_hand_list: list, c_hand_list: list):
     max_value = max(results.values())
     max_keys = [key for key, value in results.items() if value == max_value]
     max_keys = "".join(max_keys)
-    print(max_keys, max_value)
+    # print(max_keys, max_value)
     if max_keys == "Wins":
         print("You won!")
-    else:
+    elif max_keys == "Loses":
         print("You lost!")
+    else:
+        print("DRAW!")
     print("Thank you for playing!")
 
 if __name__=="__main__":
