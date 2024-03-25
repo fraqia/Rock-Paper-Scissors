@@ -7,11 +7,11 @@ def player_hand(hand: str, player_hand_list: list) -> list:
     try:
         player_choice = 0
         closest_match, score = process.extractOne(hand, options)
-        print(f"Closest match: {closest_match} (Score: {score})")
+        # print(f"Closest match: {closest_match} (Score: {score})")
         if score < 92:
-            print("Invalid choice! Please try again.")
+            print("Invalid choice! Please try again.\n")
             return None  
-        print((closest_match))
+        # print((closest_match))
         if closest_match.lower() == "rock":
             player_choice = 1
             closest_match = "Rock"
@@ -25,10 +25,10 @@ def player_hand(hand: str, player_hand_list: list) -> list:
         player_hand_list.append(player_choice)
         # print(player_hand_list)
         print(f'You: {closest_match}')
-        print(player_hand_list)
+        # print(player_hand_list)
         return player_hand_list
     except ValueError:
-        print("Invalid choice! Please try again.")
+        print("Invalid choice! Please try again.\n")
         return None  
 
 def computer_hand(c_hand_list) -> list:
@@ -39,37 +39,37 @@ def computer_hand(c_hand_list) -> list:
             c_hand_list.append(key)
             c_hand_list.append(value)
     # print(c_hand_list)
-    print(f"Computer:{c_hand_list[0]}")
+    print(f"Computer: {c_hand_list[0]}")
     return c_hand_list
 
 def who_wins(player_hand_list: list, c_hand_list: list, results: dict) -> dict:
     is_it_draw = False
     if player_hand_list[1] == c_hand_list[1]:
-        print("It's a draw.")
+        print("It's a draw.\n")
         results["Draws"] += 1
         is_it_draw = True
         return results, is_it_draw
     else:
         if player_hand_list[1] == 1: #Rock
             if c_hand_list[1] == 3: # Scissor
-                print("You won.")
+                print("You won.\n")
                 results["Wins"] += 1
             elif c_hand_list[1] == 2: #Paper
-                print("You lost.")
+                print("You lost.\n")
                 results["Loses"] += 1
         elif player_hand_list[1] == 2: #Paper
             if c_hand_list[1] == 1: # Rock
-                print("You won.")
+                print("You won.\n")
                 results["Wins"] += 1
             elif c_hand_list[1] == 3: #Scissor
-                print("You lost.")
+                print("You lost.\n")
                 results["Loses"] += 1
         elif player_hand_list[1] == 3: #Scissor
             if c_hand_list[1] == 2: # Paper
-                print("You won.")
+                print("You won.\n")
                 results["Wins"] += 1
             elif c_hand_list[1] == 1: #Rock
-                print("You lost.")
+                print("You lost.\n")
                 results["Loses"] += 1
         return results, is_it_draw
 
@@ -89,10 +89,11 @@ def game(player_hand_list: list, c_hand_list:list, results:dict, rounds_start:in
     results, is_it_draw = who_wins(player_hand_list, c_hand_list, results)
     if is_it_draw == True:
         rounds_start -= 1
-    print("*"*50)
-    print(f'Result is now:')
-    print(f'{"Wins":<8}{"Loses":<8}{"Draws":<8}')
-    print(f'{results["Wins"]:<8}{results["Loses"]:<8}{results["Draws"]:<8}')
+    print("Result is now:")
+    print("_" * 23)
+    print(f'{"Wins":<8}|{"Loses":<8}|{"Draws":<8}')
+    print(f'{results["Wins"]:<8}|{results["Loses"]:<8}|{results["Draws"]:<8}')
+    # print("_" * 50)
     return results, rounds_start
 
 if __name__=="__main__":
@@ -101,7 +102,7 @@ if __name__=="__main__":
             results = {"Wins": 0, "Loses": 0, "Draws": 0}
 
             c_hand_list = []
-            rounds = int(input('How many rounds would you like to play?\n'))
+            rounds = int(input('How many rounds would you like to play? '))
             rounds_start = 1
             while rounds_start <= rounds:
                 player_hand_list = []
@@ -109,14 +110,15 @@ if __name__=="__main__":
                 print("*"*50)
                 print(f"Round {rounds_start}:")
                 hand = input('Enter your choice (Rock/Paper/Scissors): ')
+                print()
                 hand = hand.strip()
                 player_hand_list = player_hand(hand, player_hand_list)
                 if player_hand_list is None:
                     continue
                 c_hand_list = computer_hand(c_hand_list)
                 results, rounds_start = game(player_hand_list, c_hand_list, results, rounds_start)
-                print("rounds")
-                print(rounds_start)
+                print()
+                print()
                 rounds_start += 1
             results_game(results, player_hand_list, c_hand_list)
             break
