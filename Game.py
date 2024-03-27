@@ -93,9 +93,8 @@ def save_into_file(results: str):
     with open("Game_Record.txt","a") as file:
         file.write("=" * 23)
         file.write(f'\n{"Wins":<8}|{"Loses":<8}|{"Draws":<8}\n')
-        file.write(f'{results["Wins"]:<8}|{results["Loses"]:<8}|{results["Draws"]:<8}\n')
-        file.write("\n")
-
+        file.write(f'{results["Wins"]:<8}|{results["Loses"]:<8}|{results["Draws"]:<8}')
+        file.write(f'\n')
 def game_winner(results: dict) -> None:
     print("*"*50)
     if results["Wins"] > results["Loses"]:
@@ -108,9 +107,20 @@ def game_winner(results: dict) -> None:
     print("Thank you for playing!")
     print("*"*50)
 
+def last_row_file():
+    with open("Game_Record.txt", "r") as file:
+        file.seek(0, 2)  # Move to the end of the file
+        file.seek(file.tell() - 3, 0)  # Move back one character
+        while file.read(1) != "\n":  # Move back until a newline character is found
+            file.seek(file.tell() - 2, 0)
+        last_row = file.readline()  # Read the last line
+    return last_row
+
+
 def winning_percentage(results: dict):
-    matches = int(results["Wins"]) + int(results["Loses"] + int(results["Draws"]))
-    win_percent = (int(results["Wins"]) / matches)*100
+    last_row = last_row_file()
+    last_row = [int(x.strip()) for x in last_row.split('|')]
+    win_percent = (last_row[0] / sum(last_row))*100
     print(f'Winning percentage: {win_percent}%')
 
 if __name__=="__main__":
