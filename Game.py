@@ -1,6 +1,10 @@
 from random import randint
 from fuzzywuzzy import process
 
+def open_new_file() -> None:
+    with open("Game_Record.txt","w") as file:
+        pass
+
 def player_hand(hand: str, player_hand_list: list) -> list:
     options = ["Rock", "Paper", "Scissors"]
 
@@ -42,6 +46,18 @@ def computer_hand(c_hand_list) -> list:
     print(f"Computer: {c_hand_list[0]}")
     return c_hand_list
 
+def game_scores(player_hand_list: list, c_hand_list:list, results:dict, rounds_start:int) -> dict:
+    results, is_it_draw = who_wins(player_hand_list, c_hand_list, results)
+    if is_it_draw == True:
+        rounds_start -= 1
+    print("Result is now:")
+    print("=" * 23)
+    print(f'{"Wins":<8}|{"Loses":<8}|{"Draws":<8}')
+    print(f'{results["Wins"]:<8}|{results["Loses"]:<8}|{results["Draws"]:<8}')
+    save_into_file(results)
+    # print("_" * 50)
+    return results, rounds_start
+
 def who_wins(player_hand_list: list, c_hand_list: list, results: dict) -> dict:
     is_it_draw = False
     if player_hand_list[1] == c_hand_list[1]:
@@ -73,8 +89,14 @@ def who_wins(player_hand_list: list, c_hand_list: list, results: dict) -> dict:
                 results["Loses"] += 1
         return results, is_it_draw
 
-def results_game(results: dict, player_hand_list: list, c_hand_list: list):
-    max_value = max(results.values())
+def save_into_file(results: str):
+    with open("Game_Record.txt","a") as file:
+        file.write("=" * 23)
+        file.write(f'\n{"Wins":<8}|{"Loses":<8}|{"Draws":<8}\n')
+        file.write(f'{results["Wins"]:<8}|{results["Loses"]:<8}|{results["Draws"]:<8}\n')
+        file.write("\n")
+
+def game_winner(results: dict) -> None:
     print("*"*50)
     if results["Wins"] > results["Loses"]:
         print("You won!")
@@ -82,21 +104,17 @@ def results_game(results: dict, player_hand_list: list, c_hand_list: list):
         print("You lost!")
     elif results["Wins"] == results["Loses"]:
         print("DRAW!")
+    winning_percentage(results)
     print("Thank you for playing!")
     print("*"*50)
 
-def game(player_hand_list: list, c_hand_list:list, results:dict, rounds_start:int) -> dict:
-    results, is_it_draw = who_wins(player_hand_list, c_hand_list, results)
-    if is_it_draw == True:
-        rounds_start -= 1
-    print("Result is now:")
-    print("_" * 23)
-    print(f'{"Wins":<8}|{"Loses":<8}|{"Draws":<8}')
-    print(f'{results["Wins"]:<8}|{results["Loses"]:<8}|{results["Draws"]:<8}')
-    # print("_" * 50)
-    return results, rounds_start
+def winning_percentage(results: dict):
+    matches = int(results["Wins"]) + int(results["Loses"] + int(results["Draws"]))
+    win_percent = (int(results["Wins"]) / matches)*100
+    print(f'Winning percentage: {win_percent}%')
 
 if __name__=="__main__":
+    open_new_file()
     while True:
         try:
             results = {"Wins": 0, "Loses": 0, "Draws": 0}
@@ -108,7 +126,7 @@ if __name__=="__main__":
                 player_hand_list = []
                 c_hand_list = []
                 print("*"*50)
-                print(f"Round {rounds_start}:")
+                # print(f"Round {rounds_start}:")
                 hand = input('Enter your choice (Rock/Paper/Scissors): ')
                 print()
                 hand = hand.strip()
@@ -116,17 +134,17 @@ if __name__=="__main__":
                 if player_hand_list is None:
                     continue
                 c_hand_list = computer_hand(c_hand_list)
-                results, rounds_start = game(player_hand_list, c_hand_list, results, rounds_start)
+                results, rounds_start = game_scores(player_hand_list, c_hand_list, results, rounds_start)
                 print()
                 print()
                 rounds_start += 1
-            results_game(results, player_hand_list, c_hand_list)
+            game_winner(results)
             break
         except ValueError:
             print("Invalid input! Please enter a valid number of rounds.")
         except Exception as e:
             print(f"An error occurred: {e}")
-        # results_game(results, player_hand_list, c_hand_list)
+
 
 
 
